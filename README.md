@@ -21,7 +21,13 @@ https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
 
 I've been learning about vagrant with virtualbox. So I'll be using that for VM management. I used the win10 one, because it's on the vagrant cloud thing, but all of them should work.
 
-Unfortunately, these VMs weren't set up very well for vagrant. I opened it up, disabled the firewall, made the network connection private, made a user named vagrant with password vagrant, and enabled remote desktop. Once I'd made all of these changes all of the following commands seemed to work correctly with few or no errors or warnings.
+Unfortunately, these VMs weren't set up very well for vagrant (it looks like Microsoft did their best but had some trouble with their automation scripts). The main things to do are disable the firewall, made the network connection private, made a user named vagrant with password vagrant, and enabled remote desktop. Several people have made scripts that do this:
+
+https://github.com/mrh1997/vanilla-win7-32bit-vagrantbox/tree/v1.1.0
+
+The above scripts have some questionable steps like setting the keyboard layout to german and installing SSH keys. Maybe skip those steps.
+
+copying around virtual machines tends to eat up your disk space pretty quick, btw so watch out for out of storage space errors.  Eventually you should have a box that does the following without warnings or errors.
 
 ```
 vagrant up
@@ -31,7 +37,7 @@ vagrant rdp
 vagrant halt
 ```
 
-Once the VM is clean, it might be useful to package this as a box as a starting point for future projects.
+That's your base image. Now make a directory for the client and server. Instead of putting our files solely in the VM, we are going to put them in our synced folders so after we are done we can destroy the VMs but keep the files so we can reproduce this next time.
 
 ## Starcraft : Broodwar
 
@@ -39,15 +45,14 @@ Broodwar is now free to play. Blizzard distributes version 1.18 or so which is i
 
 https://iccup.com/sc_start.html
 
-download and unzip to a directory with no spaces and make sure it can launch.
-
-## Provisioning
-Running windows installers is painful. Chocolatey is a windows package manager that can execute many application installs for you. It's super nice. You can use it to install chrome, git, a text editor, and the JDK.
-
-https://chocolatey.org/
+We'll need a copy on the client and on the server
 
 ## Tournament Manager
-At this point, you could install BWAPI and use the Chaos Launcher Multi-Instance to play bots against each other, but it's tricky to set up and automate. Thankfully, Dave Churchill has written an open tournament module that can automatically execute tournaments of BWAPI bots. The repo includes many versions of BWAPI, the 2016 AIIDE bots, and a collection of maps. The repo is very well setup. It is very easy to get it up and running.
+put the tournament manager files on the client and the server. Unzip the latest bots. Execute the vcredists installers.
 
 https://github.com/davechurchill/StarcraftAITournamentManager
 
+## Provisioning
+Running windows installers is painful. Chocolatey is a windows package manager that can execute many application installs for you. It's super nice. You can use it to install the JDK, for example.
+
+https://chocolatey.org/
