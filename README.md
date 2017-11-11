@@ -7,37 +7,13 @@ Setting an VM environment to run BWAPI bots can be a little tricky. Here's a fas
 * You want to train your bot against a variety of opponents to find strategic gaps in your bot.
 
 ## Windows Virtual Machine
-Vagrant is a VM management tool. I've been learning about it and I think I like it. The documentation is sparse but it's pretty straightforward to use.
-
-https://www.vagrantup.com/intro/index.html
-
-Virtualbox is the default VM provider for vagrant. I like virtualbox.
+There are many VM applications. I like virtualbox.
 
 https://www.virtualbox.org/wiki/VirtualBox
 
 Microsoft distributes free virtual machines for development and testing, mostly for IE and Edge. Presumably we can use these to test BWAPI bots as well.
 
 https://developer.microsoft.com/en-us/microsoft-edge/tools/vms/
-
-I've been learning about vagrant with virtualbox. So I'll be using that for VM management. I used the win10 one, because it's on the vagrant cloud thing, but all of them should work.
-
-Unfortunately, these VMs weren't set up very well for vagrant (it looks like Microsoft did their best but had some trouble with their automation scripts). The main things to do are disable the firewall, made the network connection private, made a user named vagrant with password vagrant, and enabled remote desktop. Several people have made scripts that do this:
-
-https://github.com/mrh1997/vanilla-win7-32bit-vagrantbox/tree/v1.1.0
-
-The above scripts have some questionable steps like setting the keyboard layout to german and installing SSH keys. Maybe skip those steps.
-
-copying around virtual machines tends to eat up your disk space pretty quick, btw so watch out for out of storage space errors.  Eventually you should have a box that does the following without warnings or errors.
-
-```
-vagrant up
-vagrant ssh
-vagrant winrm
-vagrant rdp
-vagrant halt
-```
-
-That's your base image. Now make a directory for the client and server. Instead of putting our files solely in the VM, we are going to put them in our synced folders so after we are done we can destroy the VMs but keep the files so we can reproduce this next time.
 
 ## Starcraft : Broodwar
 
@@ -53,6 +29,48 @@ put the tournament manager files on the client and the server. Unzip the latest 
 https://github.com/davechurchill/StarcraftAITournamentManager
 
 ## Provisioning
-Running windows installers is painful. Chocolatey is a windows package manager that can execute many application installs for you. It's super nice. You can use it to install the JDK, for example.
+Running windows installers is painful. Chocolatey is a windows package manager that can execute many application installs for you. It's super nice.
 
 https://chocolatey.org/
+
+## VM setup steps
+You might need to restart when the VM first comes up.
+
+### Install chocolatey
+open an administrator command shell.
+```
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+```
+then close this command shell and open another one
+
+### Install git, 7zip, curl, jdk8, vcredists
+```
+choco install git -y
+choco install jdk8 -y
+choco install 7zip -y
+choco install curl -y
+curl -O http://www.cs.mun.ca/%7Edchurchill/starcraftaicomp/all_vcredist_x86.zip
+7z x all_vcredist_x86.zip -ovcredists
+cd vcredists
+intall_all_vcredists.bat
+rem ###################################
+rem the install script missed these two
+rem ###################################
+vs2015_vcredist.x86.exe /q /norestart
+vs2017_vcredist.x86.exe /q /norestart
+cd ..
+```
+
+### Download Starcraft
+```
+curl -O http://files.theabyss.ru/sc/starcraft.zip
+7z x starcraft.zip -ostarcraft
+```
+
+### Download Tournament Module
+```
+git clone https://github.com/davechurchill/StarcraftAITournamentManager
+cd StarcraftAITournamentManager/server/bots
+7z x aiide_2016_bots.7z -o./
+cd ../../..
+```
