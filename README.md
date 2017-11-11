@@ -24,7 +24,7 @@ https://iccup.com/sc_start.html
 We'll need a copy on the client and on the server
 
 ## Tournament Manager
-put the tournament manager files on the client and the server. Unzip the latest bots. Execute the vcredists installers.
+We will need to put the tournament manager files on the client and the server, Unzip the latest bots, Execute the vcredists installers.
 
 https://github.com/davechurchill/StarcraftAITournamentManager
 
@@ -45,10 +45,12 @@ then close this command shell and open another one
 
 ### Install git, 7zip, curl, jdk8, vcredists
 ```
+cd C://Users/IEUser/Documents
 choco install git -y
 choco install jdk8 -y
 choco install 7zip -y
 choco install curl -y
+refreshenv
 curl -O http://www.cs.mun.ca/%7Edchurchill/starcraftaicomp/all_vcredist_x86.zip
 7z x all_vcredist_x86.zip -ovcredists
 cd vcredists
@@ -62,9 +64,11 @@ cd ..
 ```
 
 ### Download Starcraft
+download the starcraft executable. Run setup.exe to add the path to the registry so BWAPI can find it.
 ```
 curl -O http://files.theabyss.ru/sc/starcraft.zip
 7z x starcraft.zip -ostarcraft
+starcraft/setup.exe
 ```
 
 ### Download Tournament Module
@@ -74,3 +78,19 @@ cd StarcraftAITournamentManager/server/bots
 7z x aiide_2016_bots.7z -o./
 cd ../../..
 ```
+
+### Registry Permissions
+I'm still a little hazy on this point but apparently, we need to edit our registry permissions.
+The tournament instructions state: ```Edit registry so that HKLM\SOFTWARE has "Full Control" for current user```
+
+### Launch server
+```
+cd StarcraftAITournamentManager/server
+run_server.bat
+```
+The server will kick up a Swing GUI and ask you two questions. At some point, I'll have to figure out how to script the server configuration so it doesn't have to ask anything.
+
+Windows Firewall might also ask if it's okay if Java has access to the network
+
+### Launch client
+edit the json file in StarcraftAITournamentManager/client/clientsettings.json to the ip address of the server (one of them can just be localhost) and change the starcraft directory to "C:\\Users\\IEUser\\Documents\\starcraft\\"
