@@ -68,7 +68,9 @@ download the starcraft executable. Run setup.exe to add the path to the registry
 ```
 curl -O http://files.theabyss.ru/sc/starcraft.zip
 7z x starcraft.zip -ostarcraft
-starcraft/setup.exe
+cd starcraft
+setup.exe
+cd ..
 ```
 
 ### Download Tournament Module
