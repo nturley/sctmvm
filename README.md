@@ -91,3 +91,7 @@ Windows Firewall might also ask if it's okay if Java has access to the network
 
 ### Launch client
 edit the json file in StarcraftAITournamentManager/client/clientsettings.json to the ip address of the server (one of them can just be localhost) and change the starcraft directory to "C:\\Users\\IEUser\\Documents\\starcraft\\"
+
+
+### Kicking off BW manually
+`injectory.x86.exe --launch StarCraft.exe --inject bwapi-data\\BWAPI.dll --set-flags SEM_NOGPFAULTERRORBOX`
