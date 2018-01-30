@@ -55,11 +55,6 @@ curl -O http://www.cs.mun.ca/%7Edchurchill/starcraftaicomp/all_vcredist_x86.zip
 7z x all_vcredist_x86.zip -ovcredists
 cd vcredists
 intall_all_vcredists.bat
-rem ###################################
-rem the install script missed these two
-rem ###################################
-vs2015_vcredist.x86.exe /q /norestart
-vs2017_vcredist.x86.exe /q /norestart
 cd ..
 ```
 
